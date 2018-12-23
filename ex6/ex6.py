@@ -20,14 +20,15 @@ find_path = path.abspath(args.path)
 
 def find_file(mode, keyword, find_path):
     if mode == 'name':
-        find_key = keyword
+        find_key = path.join(r'**', keyword)
     elif mode == 'type':
-        find_key = '*.' + keyword
+        find_key = r'**\*.' + keyword
     else:
         print('ERROR: You can only find by name/type.')
 
-    find_list = glob(path.join(find_path, find_key))
+    find_list = glob(path.join(find_path, find_key), recursive=True)
     if find_file:
+        print('\nWe Find These >>\n')
         for stuff in find_list:
             print(stuff)
     else:
