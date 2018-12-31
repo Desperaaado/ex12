@@ -1,5 +1,5 @@
 from nose.tools import *
-import ex6
+import find
 
 def setup():
     print("SETUP!")

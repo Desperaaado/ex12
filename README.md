@@ -1,2 +1,2 @@
-# ex6
-Realize sth like [find] command.
+# ex12
+Realize sth like [find] command.(make ex6 stronger)

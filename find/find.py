@@ -1,22 +1,19 @@
+import sys
 from os import path
 from glob import glob
 import argparse
 import subprocess
 
-paser = argparse.ArgumentParser(
-    description='Realize sth like [find] command.'
-)
-paser.add_argument('-name', help='find by name')
-paser.add_argument('-type', help='find by type')
-paser.add_argument('-print', action='store_true', help='print the file')
-paser.add_argument('path', help='define the search range')
-paser.add_argument(
-    '-exec',
-    help=r'run cmd, end with \;'
-)
-args = paser.parse_args()
-
-find_path = path.abspath(args.path)
+def parser_args():
+    paser = argparse.ArgumentParser(
+        description='Realize sth like [find] command.(make ex6 stronger)'
+    )
+    paser.add_argument('-name', help='find by name')
+    paser.add_argument('-type', help='find by type')
+    paser.add_argument('-print', action='store_true', help='print the file')
+    paser.add_argument('path', nargs='?', help='define the search range')
+    paser.add_argument('-exec', help=r'run cmd, end with \;')
+    return paser.parse_args()
 
 def find_file(mode, keyword, find_path):
     if mode == 'name':
@@ -25,14 +22,17 @@ def find_file(mode, keyword, find_path):
         find_key = r'**\*.' + keyword
     else:
         print('ERROR: You can only find by name/type.')
+        sys.exit(1)
 
     find_list = glob(path.join(find_path, find_key), recursive=True)
-    if find_file:
+
+    if find_list:
         print('\nWe Find These >>\n')
         for stuff in find_list:
             print(stuff)
     else:
         print('Find Nothing!')
+
     return find_list
 
 def print_file(file_list):
@@ -69,15 +69,32 @@ def exec_file(file_list, input_exec):
 
     print('\n', '=' * 10, 'END EXECUTE', '=' * 10)
 
-if args.name:
-    file_list = find_file('name', args.name, find_path)
-elif args.type:
-    file_list = find_file('type', args.type, find_path)
-else:
-    print('ERROR: You can only find by name/type!')
+def main():
+    # init
+    args = parser_args()
+    the_path = args.path
+    if not the_path:
+        the_path = '.'
+    find_path = path.abspath(the_path)
 
-if args.print:
-    print_file(file_list)
 
-if args.exec:
-    exec_file(file_list, args.exec.split(' '))
+    # find by name
+    if args.name:
+        file_list = find_file('name', args.name, find_path)
+    # find by type
+    elif args.type:
+        file_list = find_file('type', args.type, find_path)
+    # ls
+    else:
+        file_list = find_file('name', '*', find_path) 
+
+
+    # do print (optional)
+    if args.print:
+        print_file(file_list)
+    # do exec (optional)
+    if args.exec:
+        exec_file(file_list, args.exec.split(' '))
+
+
+main()
