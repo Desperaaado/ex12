@@ -25,7 +25,7 @@ def find_file(mode, keyword, find_path):
         sys.exit(1)
 
     find_list = glob(path.join(find_path, find_key), recursive=True)
-
+    print('find_path: ', find_path)
     if find_list:
         print('\nWe Find These >>\n')
         for stuff in find_list:
